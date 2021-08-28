@@ -2,7 +2,7 @@
 <%= form_with url:  "/posts", method: :post,id: "form" do |form| %>
 <%# url:  "/posts" = どこに送信するか決める。この場合postsコントローラーのcreateアクションに送る %>
 <%# id: "form" = JavaScriptファイルで使用するid %>
-  <%= form.text_field :content %>
+  <%= form.text_field :content , id: "content" %>
   <%# text_field = 1行のテキストボックス %>
   <%= form.submit '投稿する' , id: "submit" %>
   <%# id: "submit" = JavaScriptファイルで使用するid %>

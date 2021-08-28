@@ -1,3 +1,20 @@
+const buildHTML = (XHR) => {  
+  const item = XHR.response.post;
+  // response = レスポンスプロパティ。サーバーからのレスポンスに関する情報が格納されたプロパティ
+  // レスポンスプロパティの中身 = DB: {posts: {id, content, created_at, updates_at }}
+  // レスポンスの中から投稿されたメモの情報を抽出し、変数itemに格納
+  const html = `
+    <div class="post">
+      <div class="post-date">
+        投稿日時：${item.created_at}
+      </div>
+      <div class="post-content">
+        ${item.content}
+      </div>
+    </div>`;
+  return html;
+};
+
 function post (){
   const submit = document.getElementById("submit");
   // getElementByIdメソッドで取得した投稿ボタンの要素を変数submitに格納
@@ -26,6 +43,25 @@ function post (){
     XHR.send(formData);
     // sendメソッド = リクエストを送信するメソッド
     // 上記で変数formDataに格納されたフォームに入力された値をサーバー側に送信する
+    XHR.onload = () => {
+      // onload = オンロードプロパティ。DBに保存するようリクエストの送信が成功した時呼び出されるプロパティ
+      // () => アロー関数を用いてオンロードプロパティでDBへのリクエストが成功した時に行う処理を定義する
+      if (XHR.status != 200) {
+        // XHR.status = HTTPステータスコード(200,リクエストが成功した)
+        // XHR.status != 200 = ステータスコードが200ではない場合(リクエストに失敗した場合)
+        alert(`Error ${XHR.status}: ${XHR.statusText}`);
+        // alertが表示される
+        return null;
+      };
+      const list = document.getElementById("list");
+      const formText = document.getElementById("content");
+      
+      list.insertAdjacentHTML("afterend", buildHTML(XHR));
+      // <挿入したい要素名>.insertAdjacentHTML(挿入したい位置,挿入したいHTML);
+      // buildHTML(XHR) = 上記の関数を呼び出している
+      formText.value = "";
+      // formTextのvalue属性に空の文字列を指定することで、フォームの中身をリセット
+    };
   });
 };
  
